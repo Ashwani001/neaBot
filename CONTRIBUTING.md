@@ -4,6 +4,7 @@ Items to do:
 3. Add all missing locations <Beginner friendly>
 4. Add instructions in README on things like getting nea api key
 5. Add instructions on installing required python libraries <Beginner friendly>
+6. Cache results so that only have to poll NEA everytime they update
 
 #TODO
 Expand upon this file by adding sections like:
