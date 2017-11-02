@@ -1,4 +1,4 @@
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import sys
@@ -12,13 +12,18 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+twoHrAreas=['Clementi','Downtown','Geylang','Hougang','Sengkang']
+
+#Full list
+#twoHrAreas=['Ang Mo Kio','Bedok','Bishan','Boon Lay','Bukit Batok','Bukit Merah','Bukit Panjang','Bukit Timah','Central Water Catchment','Changi','Choa Chu Kang','Clementi','Downtown','Geylang','Hougang','Jalan Bahar','Jurong East','Jurong Island','Jurong West','Kallang','Lim Chu Kang','Mandai','Marine Parade','Novena','Pasir Ris','Paya Lebar','Pioneer','Pulau Tekong','Pulau Ubin','Punggol','Queenstown','Seletar','Sembawang','Sengkang','Sentosa','Serangoon','Southern Islands','Sungei Kadut','Tampines','Tanglin','Tengah','Toa Payoh','Tuas','Western Islands','Wester Water Catchment','Woodlands','Yishun']
+
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
-	"""Send a message when the command /start is issued."""
-	update.message.reply_text('Hi!')
-
+	#update.message.reply_text('Hi!')
+        custom_keyboard =  [['2 hour rain check'],['PSI check'],['Place holder']]
+	update.message.reply_text( "Please choose your option",reply_markup=ReplyKeyboardMarkup( custom_keyboard, one_time_keyboard=False) ) 
 
 def help(bot, update):
 	"""Send a message when the command /help is issued."""
@@ -30,13 +35,29 @@ def error(bot, update, error):
 
 def twoHr(bot, update):
 	"""Two hour rain check"""
-	reply_keyboard = [['Sengkang', 'Hougang', 'Geylang', 'Kallang','Eunos']]
-	update.message.reply_text( "Please select your location",reply_markup=ReplyKeyboardMarkup( reply_keyboard, one_time_keyboard=True) ) 
+        reply_keyboard = [twoHrAreas]
 
+	update.message.reply_text( "Please select your location",reply_markup=ReplyKeyboardMarkup( reply_keyboard, one_time_keyboard=False) )#True) )
+
+	#        reply_markup = InlineKeyboardMarkup(reply_keyboard)
+	#         
+	#        update.message.reply_text('Please select your location', reply_markup=reply_markup)#todo delete
+	#        
+	#        
+	#        #Use this for inline keyboard
+	#        keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+	#            InlineKeyboardButton("Option 2", callback_data='2'),
+	#            InlineKeyboardButton("Option 3", callback_data='3')],
+	#            [InlineKeyboardButton("Option 4", callback_data='4')]]
+	#
+	#        reply_markup = InlineKeyboardMarkup(keyboard)#reply_keyboard)
+	#         
+	#        update.message.reply_text('Please select your location', reply_markup=reply_markup)
+
+        
 def psi(bot, update):
 	reply_keyboard = [['North Region', 'South Region', 'Central Region', 'West Region', 'East Region']]
 	update.message.reply_text( "Please select your region",reply_markup=ReplyKeyboardMarkup( reply_keyboard, one_time_keyboard=True) ) 
-
 
 def textHandler(bot, update):
         text=update.message.text
@@ -51,17 +72,15 @@ def textHandler(bot, update):
 		psi_check("rWE")
         elif text == 'East Region':
 		psi_check("rEA")
-   	elif text == 'Sengkang':
-		update.message.reply_text( twoHr_check("Sengkang") )
-        elif text == 'Hougang':
-                update.message.reply_text( twoHr_check("Hougang") )
-        elif text == 'Geylang':    
-                update.message.reply_text( twoHr_check("Geylang") )
-        elif text == 'Eunos':
-                update.message.reply_text( twoHr_check("Eunos"))
-        elif text == 'Kallang':    
-                update.message.reply_text( twoHr_check("Kallang") )
-	else:
+        elif text in twoHrAreas:
+                answer=twoHr_check(text)
+                markup = ReplyKeyboardRemove(selective=False)
+                bot.send_message(update.message.chat_id, answer, reply_markup=markup)
+                #start(bot, update) #If you want the main menu to come up again
+
+        elif text == '2 hour rain check':
+	        twoHr(bot, update)
+        else:
                 print 'Command Not Defined'
 
 def main():
@@ -92,7 +111,6 @@ def main():
 	# SIGTERM or SIGABRT. This should be used most of the time, since
 	# start_polling() is non-blocking and will stop the bot gracefully.
 	updater.idle()
-
 
 if __name__ == '__main__':
 	main()
