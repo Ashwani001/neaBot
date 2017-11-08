@@ -8,9 +8,10 @@ Items to do:
 7. Add feature for user to send location
 8. Use image for analysis?
 9. PSI is not working, needs to be fixed
+10. Ensure code adheres to Google Python Style Guide <Beginner friendly>
 
 #TODO
 Expand upon this file by adding sections like:
 	How to contribute
 	Submitting changes
-	Coding conventions
+	Coding conventions (not needed if using Google Python Style Guide)

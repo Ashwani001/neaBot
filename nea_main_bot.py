@@ -3,8 +3,11 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import sys
 from nea_tools import twoHr_check, psi_check
+from general_tools import read_from_file
 
-TOKEN = sys.argv[1]
+#TOKEN = read_from_file("token_telegram_bot.txt")
+TOKEN = read_from_file("token_telegram_dev_bot.txt")
+
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -35,25 +38,22 @@ def error(bot, update, error):
 
 def twoHr(bot, update):
 	"""Two hour rain check"""
-        reply_keyboard = [twoHrAreas]
+        #reply_keyboard = [twoHrAreas]
+	#update.message.reply_text( "Please select your location",reply_markup=ReplyKeyboardMarkup( reply_keyboard, one_time_keyboard=False) )
 
-	update.message.reply_text( "Please select your location",reply_markup=ReplyKeyboardMarkup( reply_keyboard, one_time_keyboard=False) )#True) )
+        twoHrAreas=['Clementi','Downtown','Geylang','Hougang','Sengkang']
 
-	#        reply_markup = InlineKeyboardMarkup(reply_keyboard)
-	#         
-	#        update.message.reply_text('Please select your location', reply_markup=reply_markup)#todo delete
-	#        
-	#        
-	#        #Use this for inline keyboard
-	#        keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
-	#            InlineKeyboardButton("Option 2", callback_data='2'),
-	#            InlineKeyboardButton("Option 3", callback_data='3')],
-	#            [InlineKeyboardButton("Option 4", callback_data='4')]]
-	#
-	#        reply_markup = InlineKeyboardMarkup(keyboard)#reply_keyboard)
-	#         
-	#        update.message.reply_text('Please select your location', reply_markup=reply_markup)
-
+        #Use this for inline keyboard
+        keyboard = [[InlineKeyboardButton("Clementi", callback_data='Clementi'),
+            InlineKeyboardButton("Downtown", callback_data='Downtown'),
+            InlineKeyboardButton("Hougang", callback_data='Hougang')],
+            [InlineKeyboardButton("Sengkang", callback_data='Sengkang')]]
+        
+        reply_markup = InlineKeyboardMarkup(keyboard)#)
+        update.message.reply_text('Please select your location', reply_markup=reply_markup)
+        
+         
+         
         
 def psi(bot, update):
 	reply_keyboard = [['North Region', 'South Region', 'Central Region', 'West Region', 'East Region']]
@@ -97,9 +97,6 @@ def main():
 	dp.add_handler(CommandHandler("twoHr", twoHr))
 	dp.add_handler(CommandHandler("psi", psi))
 	dp.add_handler(MessageHandler(Filters.text, textHandler))
-
-#	# on noncommand i.e message - echo the message on Telegram
-#	dp.add_handler(MessageHandler(Filters.text, echo))
 
 	# log all errors
 	dp.add_error_handler(error)

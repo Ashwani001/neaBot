@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 from xml.etree import ElementTree as ET
 import requests
-import pygame, sys
+import sys
 from lxml import etree
 from time import sleep
 import base64
+from general_tools import read_from_file
+
 
 data_sets=["2hr_nowcast"
 ,"24hrs_forecast"
@@ -52,6 +54,9 @@ code=[
 ['WS','Windy, Shower']]
 #add 2hr, psi, humidity, temp, heavy rain
 
+
+KEY=read_from_file("token_NEA.txt")
+
 #Used for debuging
 def pretty_print(xml_str):
     root = etree.fromstring(xml_str)
@@ -59,24 +64,13 @@ def pretty_print(xml_str):
 
 def url_join(data):
 	base_url="http://api.nea.gov.sg/api/WebAPI/?dataset="
-	keyref=""#Enter your NEA key here
+	keyref=KEY#Enter your NEA key here
 	data_set_url=data_sets[data]
 	url = base_url + data_set_url + "&keyref=" + keyref;
 	r = requests.get(url)
 	root = ET.fromstring(r.content)
 	#pretty_print(r.content)#Used for debugging
 	return root
-
-def sound(audio_file):
-	pygame.mixer.init()
-	#TODO pass song as arg or package one with script
-	pygame.mixer.music.load(audio_file)
-	pygame.mixer.music.play()
-	#pygame.mixer.music.stop()
-	while pygame.mixer.music.get_busy() == True:
-		continue
-	pygame.mixer.music.stop()
-
 
 def psi_check():
 	root=url_join(6)
@@ -87,8 +81,7 @@ def psi_check():
 	                #print childx.attrib.get('type'),childx.attrib.get('value')
                 	if ( childx.attrib.get('type') )=='NO2_1HR_MAX':
         	            if( int(childx.attrib.get('value'))>5):#low value used for demo
-				sound("../sounds/psi_high.wav")
-				#sound("../sounds/Rain_2hr_MAndarin.wav")
+				print "to do....."
 				
 def twoHr_check(area):
 	root=url_join(0)
@@ -98,9 +91,6 @@ def twoHr_check(area):
                 	for c in code:
 				if c[0]==forecast:
 					return c[1]
-			#if(child.attrib.get('forecast'))=='PN':#This is for heavy rain. i think... 
-			#sound("../sounds/rain_alert.wav")
-
 
 def save_img(img_str,img_name):
 	image_64_decode = base64.decodestring(img_str)
