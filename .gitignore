@@ -1,2 +1,4 @@
 *.pyc
-token.txt
+token_NEA.txt
+token_telegram_bot.txt
+token_telegram_dev_bot.txt
