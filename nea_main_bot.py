@@ -5,8 +5,8 @@ import sys
 from nea_tools import twoHr_check, psi_check
 from general_tools import read_from_file
 
-#TOKEN = read_from_file("token_telegram_bot.txt")
-TOKEN = read_from_file("token_telegram_dev_bot.txt")
+#TOKEN = read_from_file("tokens/token_telegram_bot.txt")
+TOKEN = read_from_file("tokens/token_telegram_dev_bot.txt")
 
 
 # Enable logging

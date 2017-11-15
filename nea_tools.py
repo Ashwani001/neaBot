@@ -55,7 +55,7 @@ code=[
 #add 2hr, psi, humidity, temp, heavy rain
 
 
-KEY=read_from_file("token_NEA.txt")
+KEY=read_from_file("tokens/token_NEA.txt")
 
 #Used for debuging
 def pretty_print(xml_str):
